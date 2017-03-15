@@ -1,0 +1,7 @@
+#junk files
+*.DS_Store
+
+#applib
+es6/node_modules/
+nodejs/node_modules/
+
