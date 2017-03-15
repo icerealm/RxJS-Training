@@ -1,5 +1,6 @@
 #junk files
 *.DS_Store
+*.log
 
 #applib
 es6/node_modules/
