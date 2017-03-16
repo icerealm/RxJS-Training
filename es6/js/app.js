@@ -131,4 +131,15 @@ window.onload = function() {
                  .subscribe( val => {console.log(val)});
     }
 
+
+    // Ex6. 
+    function example6(){
+        let source$ = Rx.Observable.range(1, 3).map(x => Rx.Observable.range(x, 4));
+        source$.flatMap(x => {
+                let str = x.constructor.name + "[start="+ x.start + ",count=" + x._count +"]"
+                console.log(str);
+                return x;
+            }).subscribe(d => console.log(d));
+    }
+
 }
