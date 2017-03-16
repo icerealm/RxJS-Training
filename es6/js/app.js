@@ -57,11 +57,16 @@ window.onload = function() {
                     .subscribe(x => {$('#viewEx4').append("<p>final:" + x +"</p>")});
     });
     
-    //Ex5. filter
+    // Ex5. filter
     Rx.Observable.range(1,10)
                  .filter(x => x%2 === 0)
                  .subscribe( val => {console.log(val)});
     
-    //Ex6. 
-
+    // Ex6. 
+    let source$ = Rx.Observable.range(1, 3).map(x => Rx.Observable.range(x, 4));
+    source$.flatMap(x => {
+            let str = x.constructor.name + "[start="+ x.start + ",count=" + x._count +"]"
+            console.log(str);
+            return x;
+        }).subscribe(d => console.log(d));
 }
