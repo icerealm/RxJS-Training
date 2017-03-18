@@ -48,6 +48,9 @@ window.onload = function() {
     $('#clrBtn11').click(function(){
         $('#viewEx11').empty();
     });
+    $('#clrBtn12').click(function(){
+        $('#viewEx12').empty();
+    });
 
 
     //----------------------- OnClick execute Code--------------------------
@@ -119,6 +122,12 @@ window.onload = function() {
     $('#exeBtn11').click(function(){
         $('#viewEx11').append(TOPIC_DISPLAY_RESULT_MESSAGE);
         example11();
+    });
+
+        //Ex12.
+    $('#exeBtn12').click(function(){
+        $('#viewEx12').append(TOPIC_DISPLAY_RESULT_MESSAGE);
+        example12();
     });
 
 
@@ -218,6 +227,14 @@ window.onload = function() {
         $('#viewEx11').append(TOPIC_EXPLAN_CODE_MESSAGE+
             CONTENT_EXPLAIN_CODE_START+
                 eval("example11")+
+            CONTENT_EXPLAIN_CODE_END); 
+    });
+
+    //Ex12.
+    $('#expBtn12').click(function(){
+        $('#viewEx12').append(TOPIC_EXPLAN_CODE_MESSAGE+
+            CONTENT_EXPLAIN_CODE_START+
+                eval("example12")+
             CONTENT_EXPLAIN_CODE_END); 
     });
 
@@ -367,14 +384,17 @@ window.onload = function() {
     }
 
     function example12(){
+        //Ex 12. Show Loading page first while wating other resources(Observables) in datasource.
         let subject = new Rx.BehaviorSubject("Loading page...");
 
-        subject.subscribe( x => console.log(x || "empty"),
-                        err => console.log(err));
+        subject.subscribe( x => htmlPrint("#viewEx12", x || "empty"),
+                        err => htmlPrint("#viewEx12", err));
         Rx.Observable.create(obs => {
-            setTimeout(() => obs.next("{data:'myscript'}"), 2000);
-            setTimeout(() => obs.next("{data:'myscript2'}"), 3000);
-            setTimeout(() => obs.next(null), 3000);
+            rx.DOM.get('https://jsonplaceholder.typicode.com/posts/1').map(x => JSON.parse(x.response))
+                  .subscribe(x => obs.next(JSON.stringify(x)));
+            setTimeout(() => obs.next("{data:'myscript'}"), 500);
+            setTimeout(() => obs.next("{data:'myscript2'}"), 2000);
+            setTimeout(() => obs.next(null), 4000);
         }).subscribe(subject);
     }
 
