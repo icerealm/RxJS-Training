@@ -244,7 +244,7 @@ window.onload = function() {
     function example1(){
         //Ex1. Use of to create Observable items
         let source$ = Rx.Observable.of(1,2,3,5,6);
-        console.log(source$);
+        htmlPrint('#viewEx1', source$.constructor);
         source$.subscribe(d => {
             htmlPrint('#viewEx1', d +"&nbsp;");
         });
