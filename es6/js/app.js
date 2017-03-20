@@ -450,6 +450,8 @@ window.onload = function() {
     }
 
     function example14(){
+       // Ex14. Create a combination result of 2 different sources.
+        
         let source1$ = Rx.Observable.create( obs => {
             rx.DOM.get('https://jsonplaceholder.typicode.com/posts/1')
                 .subscribe(x => obs.next(x.response),
