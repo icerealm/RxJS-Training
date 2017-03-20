@@ -1,3 +1,9 @@
+/**
+ * These example are created with RxJS 5.0. If user who see the example 
+ * and need to apply to the old version (4.0), plase compare API from this link 
+ * https://github.com/ReactiveX/rxjs/blob/master/MIGRATION.md
+ *  
+ */
 import Rx from 'rxjs/Rx';
 import $ from 'jquery';
 import rx from 'rx-dom';
@@ -51,6 +57,12 @@ window.onload = function() {
     $('#clrBtn12').click(function(){
         $('#viewEx12').empty();
     });
+    $('#clrBtn13').click(function(){
+        $('#viewEx13').empty();
+    });
+    $('#clrBtn14').click(function(){
+        $('#viewEx14').empty();
+    });
 
 
     //----------------------- OnClick execute Code--------------------------
@@ -62,7 +74,7 @@ window.onload = function() {
     });
     
 
-    //Ex2.
+    //Ex2. 
     example2();
 
 
@@ -124,10 +136,19 @@ window.onload = function() {
         example11();
     });
 
-        //Ex12.
+    //Ex12.
     $('#exeBtn12').click(function(){
         $('#viewEx12').append(TOPIC_DISPLAY_RESULT_MESSAGE);
         example12();
+    });
+
+    //Ex13. 
+    example13()
+
+    //Ex14.
+    $('#exeBtn14').click(function(){
+        $('#viewEx14').append(TOPIC_DISPLAY_RESULT_MESSAGE);
+        example14();
     });
 
 
@@ -238,6 +259,21 @@ window.onload = function() {
             CONTENT_EXPLAIN_CODE_END); 
     });
 
+    //Ex13.
+    $('#expBtn13').click(function(){
+        $('#viewEx13').append(TOPIC_EXPLAN_CODE_MESSAGE+
+            CONTENT_EXPLAIN_CODE_START+
+                eval("example13")+
+            CONTENT_EXPLAIN_CODE_END); 
+    });
+
+    //Ex14.
+    $('#expBtn14').click(function(){
+        $('#viewEx14').append(TOPIC_EXPLAN_CODE_MESSAGE+
+            CONTENT_EXPLAIN_CODE_START+
+                eval("example14")+
+            CONTENT_EXPLAIN_CODE_END); 
+    });
 
     //----------------------- Function Code ----------------------------
 
@@ -384,7 +420,7 @@ window.onload = function() {
     }
 
     function example12(){
-        //Ex 12. Show Loading page first while wating other resources(Observables) in datasource.
+        //Ex12. Show Loading page first while wating other resources(Observables) in datasource.
         let subject = new Rx.BehaviorSubject("Loading page...");
 
         subject.subscribe( x => htmlPrint("#viewEx12", x || "empty"),
@@ -398,5 +434,44 @@ window.onload = function() {
         }).subscribe(subject);
     }
 
+    function example13(){
+        //Ex13. delay emit data every 1 second when user input.
+        // there are more backpressure techniques. Here is the link if you want to see other examples
+        //https://github.com/Reactive-Extensions/RxJS/blob/master/doc/gettingstarted/backpressure.md
+        let textInput = $('#dataIn13');
+        let view13 = $('#viewEx13');
+        let source$ = Rx.Observable.fromEvent(textInput, "keypress")
+                                .map(x => x.target.value)
+                                .debounceTime(1000);
+        source$.subscribe( x => {
+            view13.empty(); 
+            htmlPrint('#viewEx13',textInput.val());
+        });
+    }
 
+    function example14(){
+        let source1$ = Rx.Observable.create( obs => {
+            rx.DOM.get('https://jsonplaceholder.typicode.com/posts/1')
+                .subscribe(x => obs.next(x.response),
+                        err => {obs.error(err)},
+                            () => {obs.complete()});
+        });
+
+        let source2$ = Rx.Observable.create( obs => {
+            rx.DOM.get('https://jsonplaceholder.typicode.com/comments/1')
+                .subscribe(x => obs.next(x.response), 
+                        err => {obs.error(err)},
+                            () => {obs.complete()});
+        });
+    
+        var source = Rx.Observable.forkJoin( source1$, source2$, (x, y) => {
+            let user = JSON.parse(x);
+            let comment = JSON.parse(y);
+            htmlPrint('#viewEx14', "source1_data# " + JSON.stringify(user));
+            htmlPrint('#viewEx14', "source2_data# " + JSON.stringify(comment));
+            return { userId: user.userId, comment: comment.body };
+        });
+
+        var subscription = source.subscribe(x => htmlPrint('#viewEx14', "result_data# " + JSON.stringify(x)));
+    }
 }
