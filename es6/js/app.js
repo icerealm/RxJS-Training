@@ -1,6 +1,6 @@
 /**
  * These example are created with RxJS 5.0. If user who see the example 
- * and need to apply to the old version (4.0), plase compare API from this link 
+ * need to apply to the old version (4.0), plase compare API from this link 
  * https://github.com/ReactiveX/rxjs/blob/master/MIGRATION.md
  *  
  */
@@ -435,7 +435,8 @@ window.onload = function() {
     }
 
     function example13(){
-        //Ex13. delay emit data every 1 second when user input.
+        //Ex13. Delay emiting data every 1 second when user input. This is useful when we don't want to execute
+        //every single character from user input.
         // there are more backpressure techniques. Here is the link if you want to see other examples
         //https://github.com/Reactive-Extensions/RxJS/blob/master/doc/gettingstarted/backpressure.md
         let textInput = $('#dataIn13');
