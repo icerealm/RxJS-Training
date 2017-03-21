@@ -63,7 +63,9 @@ window.onload = function() {
     $('#clrBtn14').click(function(){
         $('#viewEx14').empty();
     });
-
+    $('#clrBtn15').click(function(){
+        $('#viewEx15').empty();
+    });
 
     //----------------------- OnClick execute Code--------------------------
 
@@ -149,6 +151,12 @@ window.onload = function() {
     $('#exeBtn14').click(function(){
         $('#viewEx14').append(TOPIC_DISPLAY_RESULT_MESSAGE);
         example14();
+    });
+
+    //Ex15.
+    $('#exeBtn15').click(function(){
+        $('#viewEx15').append(TOPIC_DISPLAY_RESULT_MESSAGE);
+        example15();
     });
 
 
@@ -272,6 +280,14 @@ window.onload = function() {
         $('#viewEx14').append(TOPIC_EXPLAN_CODE_MESSAGE+
             CONTENT_EXPLAIN_CODE_START+
                 eval("example14")+
+            CONTENT_EXPLAIN_CODE_END); 
+    });
+
+    //Ex15.
+    $('#expBtn15').click(function(){
+        $('#viewEx15').append(TOPIC_EXPLAN_CODE_MESSAGE+
+            CONTENT_EXPLAIN_CODE_START+
+                eval("example15")+
             CONTENT_EXPLAIN_CODE_END); 
     });
 
@@ -477,4 +493,26 @@ window.onload = function() {
 
         var subscription = source.subscribe(x => htmlPrint('#viewEx14', "result_data# " + JSON.stringify(x)));
     }
+
+    function example15(){
+        //Ex 15. Keep sampling to get 2 comments from source.
+        let source$ = Rx.Observable.create( obs => {
+            let commentId = 1;
+            setInterval(() => {
+                        rx.DOM.get('https://jsonplaceholder.typicode.com/comments/'+ commentId++)
+                            .subscribe(x => obs.next(x.response),
+                                        err => obs.error(err));
+                    }, 1000);
+        });
+        let subject = new Rx.Subject();
+
+        let subscription = source$.subscribe(subject);
+
+        subject.sample(Rx.Observable.interval(5000))
+            .take(2)
+            .subscribe(x => htmlPrint('#viewEx15', x),
+                        err => subscription.unsubscribe(),
+                        () => subscription.unsubscribe());
+    }
+
 }
